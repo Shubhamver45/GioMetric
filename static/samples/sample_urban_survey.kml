@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Metropolitan Urban Survey &amp; Measurements</name>
+    <description>Sample dataset containing urban zoning polygons, transit corridors, and landmark coordinates.</description>
+    
+    <Placemark>
+      <name>Central Tech Park Zone</name>
+      <description>Commercial Technology Hub</description>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.5900,12.9700,0
+              77.6050,12.9700,0
+              77.6050,12.9820,0
+              77.5900,12.9820,0
+              77.5900,12.9700,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <Placemark>
+      <name>Botanical Ecological Reserve</name>
+      <description>Protected Green Belt Zone</description>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.5750,12.9550,0
+              77.5880,12.9520,0
+              77.5850,12.9640,0
+              77.5720,12.9620,0
+              77.5750,12.9550,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <Placemark>
+      <name>Innovation Corridor Expressway</name>
+      <description>Primary arterial transit corridor</description>
+      <LineString>
+        <coordinates>
+          77.5650,12.9450,0
+          77.5800,12.9600,0
+          77.6000,12.9750,0
+          77.6200,12.9900,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+
+    <Placemark>
+      <name>Riverside Green Promenade</name>
+      <description>Pedestrian and bicycle recreational trail</description>
+      <LineString>
+        <coordinates>
+          77.5700,12.9800,0
+          77.5850,12.9850,0
+          77.5950,12.9920,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+
+    <Placemark>
+      <name>Metro Transit Junction Hub</name>
+      <description>Multimodal transport interchange</description>
+      <Point>
+        <coordinates>77.5946,12.9716,0</coordinates>
+      </Point>
+    </Placemark>
+
+    <Placemark>
+      <name>Civic Center Benchmark</name>
+      <description>Geodetic reference monument</description>
+      <Point>
+        <coordinates>77.5830,12.9630,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

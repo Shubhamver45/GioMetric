@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Yellowstone Wildlife Conservation &amp; Migration Corridor</name>
+    <Placemark>
+      <name>Northern Elk Grazing Reserve</name>
+      <description>Habitat: Subalpine Meadow | Elevation: 2,200m</description>
+      <Polygon>
+        <outerBoundaryIs><LinearRing><coordinates>
+          -110.60,44.75,0 -110.45,44.75,0 -110.45,44.88,0 -110.60,44.88,0 -110.60,44.75,0
+        </coordinates></LinearRing></outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Lamar Valley Bison Sanctuary</name>
+      <description>Habitat: River Valley | Herd Size: 850</description>
+      <Polygon>
+        <outerBoundaryIs><LinearRing><coordinates>
+          -110.40,44.80,0 -110.25,44.80,0 -110.22,44.92,0 -110.38,44.94,0 -110.40,44.80,0
+        </coordinates></LinearRing></outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+    <Placemark>
+      <name>Spring Grizzly Migration Corridor</name>
+      <description>Corridor Length: 28 km | Seasonal Restriction: April-June</description>
+      <LineString>
+        <coordinates>
+          -110.65,44.70,0 -110.50,44.80,0 -110.35,44.85,0 -110.20,44.95,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>Yellowstone River Headwaters</name>
+      <description>Stream Order: 4 | Flow Rate: 120 m3/s</description>
+      <LineString>
+        <coordinates>
+          -110.55,44.65,0 -110.45,44.78,0 -110.35,44.88,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+    <Placemark>
+      <name>Tower Fall Ranger Station</name>
+      <description>Elevation: 2,030m | Radio Frequency: 168.35 MHz</description>
+      <Point><coordinates>-110.42,44.89,0</coordinates></Point>
+    </Placemark>
+  </Document>
+</kml>

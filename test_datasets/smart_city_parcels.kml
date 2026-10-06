@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Metropolitan Smart City District</name>
+    <description>Urban zoning parcels, transit lines, and smart grid sensors</description>
+    
+    <Placemark>
+      <name>Commercial Tech Zone Alpha</name>
+      <description>High-density commercial office zone</description>
+      <ExtendedData>
+        <Data name="ZoneType"><value>Commercial</value></Data>
+        <Data name="FloorAreaRatio"><value>3.75</value></Data>
+        <Data name="MaxHeight_m"><value>120</value></Data>
+      </ExtendedData>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.585,12.965,0
+              77.595,12.965,0
+              77.595,12.975,0
+              77.585,12.975,0
+              77.585,12.965,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <Placemark>
+      <name>Residential Eco-Park Sector</name>
+      <description>Green residential living community</description>
+      <ExtendedData>
+        <Data name="ZoneType"><value>Residential</value></Data>
+        <Data name="GreenCoverage_pct"><value>45.0</value></Data>
+      </ExtendedData>
+      <Polygon>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>
+              77.600,12.965,0
+              77.615,12.965,0
+              77.615,12.980,0
+              77.600,12.980,0
+              77.600,12.965,0
+            </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+    </Placemark>
+
+    <Placemark>
+      <name>Rapid Transit Light Rail Corridor</name>
+      <description>Electrified dual-track public transit line</description>
+      <ExtendedData>
+        <Data name="SpeedLimit_kmh"><value>80</value></Data>
+        <Data name="DailyRidership"><value>45000</value></Data>
+      </ExtendedData>
+      <LineString>
+        <coordinates>
+          77.580,12.960,0
+          77.590,12.970,0
+          77.605,12.975,0
+          77.620,12.985,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+
+    <Placemark>
+      <name>Central Fiber Optic Backbone</name>
+      <description>Underground municipal high-speed network conduit</description>
+      <LineString>
+        <coordinates>
+          77.585,12.962,0
+          77.595,12.968,0
+          77.610,12.972,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+
+    <Placemark>
+      <name>Air Quality &amp; Smart Weather Station #1</name>
+      <Point>
+        <coordinates>77.590,12.970,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
