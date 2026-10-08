@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoMetric Pro | Advanced Geospatial Measurement & Analytics Platform</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Ambient Background Glows -->
+  <div class="glow-sphere sphere-1"></div>
+  <div class="glow-sphere sphere-2"></div>
+  <div class="glow-sphere sphere-3"></div>
+
+  <!-- Header / Navigation -->
+  <header class="app-header">
+    <div class="brand-container">
+      <div class="brand-icon-wrapper">
+        <i data-lucide="layers" class="brand-icon"></i>
+        <div class="pulse-ring"></div>
+      </div>
+      <div class="brand-text">
+        <h1 class="brand-title">GeoMetric <span class="brand-accent">Pro</span></h1>
+        <p class="brand-subtitle">Geospatial Vector Measurement & Analytics Engine</p>
+      </div>
+    </div>
+
+    <!-- Active File Badge & Actions -->
+    <div class="header-actions">
+      <div id="activeFileIndicator" class="active-file-pill hidden">
+        <span class="status-dot pulse"></span>
+        <span id="activeFileName" class="active-file-name">filename.kml</span>
+        <span id="activeFileCrs" class="badge-crs">EPSG:4326</span>
+      </div>
+
+      <!-- Unit System Toggle -->
+      <div class="unit-toggle-group">
+        <button id="unitMetricBtn" class="unit-btn active" title="Metric units (m², km², m, km)">Metric</button>
+        <button id="unitImperialBtn" class="unit-btn" title="Imperial units (Acres, sq ft, miles, ft)">Imperial</button>
+      </div>
+
+      <!-- Action Buttons -->
+      <button id="openUploadBtn" class="btn btn-primary">
+        <i data-lucide="upload-cloud"></i>
+        <span>Upload File</span>
+      </button>
+
+      <button id="openHistoryBtn" class="btn btn-secondary">
+        <i data-lucide="history"></i>
+        <span>History</span>
+      </button>
+
+      <a href="/docs" target="_blank" class="btn btn-ghost" title="Interactive Swagger API Documentation">
+        <i data-lucide="code"></i>
+        <span>API Docs</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main App Container -->
+  <main class="main-layout">
+    
+    <!-- Top KPI & Analytics Bar -->
+    <section class="kpi-grid">
+      <!-- Area KPI -->
+      <div class="kpi-card card-glow-emerald">
+        <div class="kpi-header">
+          <div class="kpi-icon-box icon-emerald">
+            <i data-lucide="box-select"></i>
+          </div>
+          <span class="kpi-label">Total Enclosed Area</span>
+          <span class="kpi-tag" id="polyCountTag">0 Polygons</span>
+        </div>
+        <div class="kpi-value-container">
+          <span id="kpiAreaPrimary" class="kpi-value">0.00</span>
+          <span id="kpiAreaPrimaryUnit" class="kpi-unit">m²</span>
+        </div>
+        <div class="kpi-footer">
+          <span class="kpi-secondary-val">≈ <span id="kpiAreaSecondary">0.00</span> <span id="kpiAreaSecondaryUnit">km²</span></span>
+          <span class="kpi-tertiary-val">/ <span id="kpiAreaTertiary">0.00</span> <span id="kpiAreaTertiaryUnit">Hectares</span></span>
+        </div>
+      </div>
+
+      <!-- Length KPI -->
+      <div class="kpi-card card-glow-cyan">
+        <div class="kpi-header">
+          <div class="kpi-icon-box icon-cyan">
+            <i data-lucide="route"></i>
+          </div>
+          <span class="kpi-label">Total Linear Length</span>
+          <span class="kpi-tag" id="lineCountTag">0 Lines</span>
+        </div>
+        <div class="kpi-value-container">
+          <span id="kpiLengthPrimary" class="kpi-value">0.00</span>
+          <span id="kpiLengthPrimaryUnit" class="kpi-unit">m</span>
+        </div>
+        <div class="kpi-footer">
+          <span class="kpi-secondary-val">≈ <span id="kpiLengthSecondary">0.00</span> <span id="kpiLengthSecondaryUnit">km</span></span>
+          <span class="kpi-tertiary-val">/ <span id="kpiLengthTertiary">0.00</span> <span id="kpiLengthTertiaryUnit">Miles</span></span>
+        </div>
+      </div>
+
+      <!-- Total Features & Breakdown KPI -->
+      <div class="kpi-card card-glow-violet">
+        <div class="kpi-header">
+          <div class="kpi-icon-box icon-violet">
+            <i data-lucide="map-pin"></i>
+          </div>
+          <span class="kpi-label">Features Extracted</span>
+          <span class="kpi-tag" id="crsTag">UTM Accurate</span>
+        </div>
+        <div class="kpi-value-container">
+          <span id="kpiFeatureCount" class="kpi-value">0</span>
+          <span class="kpi-unit">Total</span>
+        </div>
+        <div class="kpi-breakdown-bar">
+          <div id="barPoly" class="bar-segment bar-poly" title="Polygons" style="width: 0%;"></div>
+          <div id="barLine" class="bar-segment bar-line" title="LineStrings" style="width: 0%;"></div>
+          <div id="barPoint" class="bar-segment bar-point" title="Points" style="width: 0%;"></div>
+        </div>
+        <div class="kpi-footer flex-between">
+          <span class="legend-item"><span class="dot dot-poly"></span> <span id="legendPoly">0</span> Poly</span>
+          <span class="legend-item"><span class="dot dot-line"></span> <span id="legendLine">0</span> Lines</span>
+          <span class="legend-item"><span class="dot dot-point"></span> <span id="legendPoint">0</span> Points</span>
+        </div>
+      </div>
+
+      <!-- Export & Actions KPI -->
+      <div class="kpi-card card-glow-amber">
+        <div class="kpi-header">
+          <div class="kpi-icon-box icon-amber">
+            <i data-lucide="download"></i>
+          </div>
+          <span class="kpi-label">Export Data</span>
+          <span class="kpi-tag">Instant</span>
+        </div>
+        <div class="export-actions-grid">
+          <button id="exportGeoJsonBtn" class="btn-action" disabled>
+            <i data-lucide="file-code"></i> GeoJSON
+          </button>
+          <button id="exportCsvBtn" class="btn-action" disabled>
+            <i data-lucide="file-spreadsheet"></i> CSV Table
+          </button>
+          <button id="copyGeoJsonBtn" class="btn-action" disabled>
+            <i data-lucide="copy"></i> Copy JSON
+          </button>
+          <button id="fitBoundsBtn" class="btn-action" disabled>
+            <i data-lucide="maximize"></i> Zoom Fit
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Center Workspace: Split Map and Feature Table -->
+    <div class="workspace-grid">
+      
+      <!-- Interactive Map Panel -->
+      <div class="panel map-panel">
+        <div class="panel-header">
+          <div class="panel-title-wrapper">
+            <i data-lucide="map" class="panel-title-icon"></i>
+            <h2 class="panel-title">Spatial Map Visualization</h2>
+          </div>
+          
+          <!-- Map Layer Controls & Coordinate Readout -->
+          <div class="map-controls-header">
+            <div id="mapCoordinates" class="coord-display font-mono">
+              Lat: 0.00000 | Lon: 0.00000
+            </div>
+            <div class="basemap-selector">
+              <button class="base-btn active" data-layer="dark" title="Dark Canvas">Dark</button>
+              <button class="base-btn" data-layer="satellite" title="Satellite Imagery">Satellite</button>
+              <button class="base-btn" data-layer="osm" title="Streets">Streets</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-wrapper">
+          <div id="map"></div>
+
+          <!-- Empty State Overlay on Map -->
+          <div id="mapEmptyOverlay" class="map-empty-state">
+            <div class="empty-content-box">
+              <div class="empty-icon-pulse">
+                <i data-lucide="upload-cloud"></i>
+              </div>
+              <h3>No Geospatial Dataset Loaded</h3>
+              <p>Upload a <strong>Shapefile (.zip)</strong> or <strong>Google Earth (.kml)</strong> to inspect geometries, compute geodesic measurements, and explore spatial layers.</p>
+              
+              <div class="quick-sample-buttons">
+                <button id="loadKmlSampleBtn" class="btn btn-sample">
+                  <i data-lucide="sparkles"></i>
+                  <span>Try Sample KML (Urban Survey)</span>
+                </button>
+                <button id="loadShpSampleBtn" class="btn btn-sample">
+                  <i data-lucide="zap"></i>
+                  <span>Try Sample Shapefile (.ZIP)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Map Legend -->
+          <div id="mapLegend" class="map-floating-legend hidden">
+            <span class="legend-badge poly"><span class="legend-swatch poly-swatch"></span> Polygons (Area)</span>
+            <span class="legend-badge line"><span class="legend-swatch line-swatch"></span> LineStrings (Length)</span>
+            <span class="legend-badge point"><span class="legend-swatch point-swatch"></span> Points</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Measurement Inspector Table Panel -->
+      <div class="panel table-panel">
+        <div class="panel-header">
+          <div class="panel-title-wrapper">
+            <i data-lucide="table" class="panel-title-icon"></i>
+            <h2 class="panel-title">Feature Measurements & Attributes</h2>
+          </div>
+
+          <!-- Table Search and Filter -->
+          <div class="table-actions">
+            <div class="search-input-wrapper">
+              <i data-lucide="search" class="search-icon"></i>
+              <input type="text" id="tableSearchInput" placeholder="Filter by ID, type, or property..." />
+            </div>
+
+            <div class="filter-pills">
+              <button class="pill-btn active" data-filter="all">All (<span id="countFilterAll">0</span>)</button>
+              <button class="pill-btn" data-filter="Polygon">Polygons</button>
+              <button class="pill-btn" data-filter="LineString">Lines</button>
+              <button class="pill-btn" data-filter="Point">Points</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Body -->
+        <div class="table-wrapper">
+          <table class="data-table" id="featuresTable">
+            <thead>
+              <tr>
+                <th class="th-idx">#</th>
+                <th class="th-type">Geometry Type</th>
+                <th class="th-area">Calculated Area</th>
+                <th class="th-len">Calculated Length</th>
+                <th class="th-props">Attributes</th>
+                <th class="th-action">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="featuresTableBody">
+              <tr class="empty-row">
+                <td colspan="6" class="text-center py-8 text-muted">
+                  No features to display. Upload a file or load a sample dataset.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <i data-lucide="upload" class="modal-icon"></i>
+          <div>
+            <h3 class="modal-title">Upload Geospatial File</h3>
+            <p class="modal-desc">Supports Shapefile ZIP (.zip) & Google Earth KML (.kml)</p>
+          </div>
+        </div>
+        <button id="closeUploadModalBtn" class="btn-close">&times;</button>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div class="modal-body">
+        <div id="dropZone" class="drop-zone">
+          <input type="file" id="fileInput" accept=".zip,.kml" class="file-input-hidden" />
+          <div class="drop-zone-content">
+            <div class="drop-icon-anim">
+              <i data-lucide="file-up"></i>
+            </div>
+            <h4>Drag & Drop your file here</h4>
+            <p>or <span class="browse-link">browse from your computer</span></p>
+            <div class="format-badges">
+              <span class="badge badge-zip">.ZIP (Shapefile + SHP/DBF/SHX)</span>
+              <span class="badge badge-kml">.KML (Google Earth)</span>
+            </div>
+            <p class="file-size-limit">Maximum upload size: 50 MB • Automatic UTM Zone Auto-Reprojection</p>
+          </div>
+        </div>
+
+        <!-- Selected File Status Preview -->
+        <div id="fileSelectionPreview" class="file-preview-card hidden">
+          <div class="preview-info">
+            <i data-lucide="file" class="preview-file-icon"></i>
+            <div>
+              <p id="previewFileName" class="preview-name">survey.zip</p>
+              <p id="previewFileSize" class="preview-size">1.4 MB</p>
+            </div>
+          </div>
+          <button id="clearSelectedFileBtn" class="btn-icon-danger" title="Remove file">
+            <i data-lucide="trash-2"></i>
+          </button>
+        </div>
+
+        <!-- Processing Progress Pipeline -->
+        <div id="processingPipeline" class="processing-pipeline hidden">
+          <div class="progress-bar-container">
+            <div id="uploadProgressBar" class="progress-bar-fill"></div>
+          </div>
+          <div class="pipeline-steps">
+            <div class="pipe-step active" id="step1">
+              <span class="step-num">1</span>
+              <span class="step-text">Uploading File</span>
+            </div>
+            <div class="pipe-step" id="step2">
+              <span class="step-num">2</span>
+              <span class="step-text">Parsing Spatial Vectors</span>
+            </div>
+            <div class="pipe-step" id="step3">
+              <span class="step-num">3</span>
+              <span class="step-text">UTM Reprojection & Metrics</span>
+            </div>
+            <div class="pipe-step" id="step4">
+              <span class="step-num">4</span>
+              <span class="step-text">Rendering Layer Map</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Samples in Modal -->
+        <div class="modal-divider">
+          <span>OR LOAD PRE-PACKAGED SAMPLES</span>
+        </div>
+
+        <div class="modal-samples-grid">
+          <button id="modalSampleKmlBtn" class="btn-sample-card">
+            <div class="sample-icon icon-kml"><i data-lucide="map-pinned"></i></div>
+            <div class="sample-details">
+              <strong>Urban Survey (KML)</strong>
+              <span>Polygons, Transit Corridors, Metro Hubs</span>
+            </div>
+          </button>
+
+          <button id="modalSampleShpBtn" class="btn-sample-card">
+            <div class="sample-icon icon-shp"><i data-lucide="layers"></i></div>
+            <div class="sample-details">
+              <strong>Cadastral Parcels (.ZIP)</strong>
+              <span>Land Lots, Valuation & Zoning Properties</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="cancelUploadBtn" class="btn btn-secondary">Cancel</button>
+        <button id="submitUploadBtn" class="btn btn-primary" disabled>
+          <i data-lucide="play"></i>
+          <span>Process & Measure</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Drawer -->
+  <div id="historyModal" class="modal-backdrop hidden">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <i data-lucide="history" class="modal-icon"></i>
+          <div>
+            <h3 class="modal-title">Upload History & Datasets</h3>
+            <p class="modal-desc">Switch between previously processed files</p>
+          </div>
+        </div>
+        <button id="closeHistoryModalBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body max-h-drawer">
+        <div id="historyListContainer" class="history-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="refreshHistoryBtn" class="btn btn-secondary">
+          <i data-lucide="refresh-cw"></i> Refresh
+        </button>
+        <button id="closeHistoryBtn" class="btn btn-primary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Detail / WKT Inspector Modal -->
+  <div id="featureDetailModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <i data-lucide="info" class="modal-icon"></i>
+          <div>
+            <h3 class="modal-title" id="featureModalTitle">Feature Inspector</h3>
+            <p class="modal-desc" id="featureModalSubtitle">Index #0 • Polygon</p>
+          </div>
+        </div>
+        <button id="closeFeatureDetailBtn" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body feature-modal-body">
+        <div class="detail-section">
+          <h4>Measurements</h4>
+          <div class="measurement-badges-grid" id="featureMeasurementsGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h4>Attribute Properties (JSON)</h4>
+          <pre id="featurePropsJson" class="code-box"></pre>
+        </div>
+
+        <div class="detail-section">
+          <h4>Well-Known Text (WKT) Geometry</h4>
+          <pre id="featureWktText" class="code-box font-mono"></pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="closeFeatureModalBtn" class="btn btn-secondary">Close</button>
+        <button id="zoomToCurrentFeatureBtn" class="btn btn-primary">
+          <i data-lucide="crosshair"></i> Zoom on Map
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
